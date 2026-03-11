@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SelfPortraits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #c8c8c8;
+      font-family: 'Josefin Sans', sans-serif;
+      color: #7a7a7a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .content {
+      flex: 1;
+      padding: 80px 100px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      margin-bottom: 40px;
+      background-color: #b0b0b0;
+      display: inline-block;
+      padding: 14px 40px;
+    }
+    .text-block {
+      background-color: #b8b8b8;
+      padding: 40px 50px;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      letter-spacing: 0.03em;
+      max-width: 700px;
+    }
+    footer {
+      background-color: #a8a8a8;
+      padding: 40px 80px;
+    }
+    footer a {
+      display: block;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: #7a7a7a;
+      text-decoration: none;
+      margin-bottom: 18px;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    footer a:hover { color: #555; }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1 id="page-title"></h1>
+    <div class="text-block">meow</div>
+  </div>
+  <footer>
+    <a href="about.html">About the artist</a>
+    <a href="serie.html">SelfPortraits : A serie</a>
+    <a href="contact.html">Contact me</a>
+  </footer>
+  <script>
+    const titles = { 'about.html': 'About the artist', 'serie.html': 'SelfPortraits : A serie', 'contact.html': 'Contact me' };
+    const page = window.location.pathname.split('/').pop();
+    document.getElementById('page-title').textContent = titles[page] || '';
+    document.title = 'SelfPortraits — ' + (titles[page] || '');
+  </script>
+</body>
+</html>

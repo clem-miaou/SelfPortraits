@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SelfPortraits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #c8c8c8;
+      --card-bg: #b8b8b8;
+      --text: #7a7a7a;
+      --header-bg: #b0b0b0;
+      --font: 'Josefin Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: var(--font);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 60px;
+    }
+
+    .header-title {
+      background-color: var(--header-bg);
+      padding: 18px 60px;
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+
+    /* GALLERY GRID */
+    .gallery {
+      padding: 20px 60px 60px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 12px;
+    }
+
+    .portrait-thumb {
+      background: #d0d0d0;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .portrait-thumb:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+    }
+
+    .portrait-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(10%);
+    }
+
+    /* FOOTER */
+    footer {
+      background-color: #a8a8a8;
+      padding: 60px 80px;
+      margin-top: 20px;
+    }
+
+    footer a {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--text);
+      text-decoration: none;
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">SelfPortraits</div>
+  </header>
+
+  <div class="gallery" id="gallery"></div>
+
+  <footer>
+    <a href="about.html">About the artist</a>
+    <a href="serie.html">SelfPortraits : A serie</a>
+    <a href="contact.html">Contact me</a>
+  </footer>
+
+  <script>
+    // Portrait data: 62 entries (note: no 41.jpg based on files found)
+    const portraits = [
+      { n:1,  date:"24/09", keyword:"BEAUX-ARTS",  time:"22h25", duration:"10 min", day:"Wednesday", ref:"no reference",    desc:"Long day, lots of energy (both positive and negative). Took pleasure drawing this first portrait of the serie" },
+      { n:2,  date:"25/09", keyword:"TEA",          time:"17h47", duration:"9 min",  day:"Thursday",  ref:"live reference",  desc:"Great day, drank a lot of tea, which explains the bowl of tea's presence." },
+      { n:3,  date:"26/09", keyword:"MOLDY",        time:"18h36", duration:"1 min",  day:"Friday",    ref:"no reference",   desc:"Exhausting day ; gave a try to math option for school (so long !), my bottle of sirup had mold on it, bad surprise" },
+      { n:4,  date:"27/09", keyword:"FRESQUE",      time:"19h48", duration:"6 min",  day:"Saturday",  ref:"photo as a reference", desc:"Rencontre de l'audition, event organized by the HUG, spent my morning cooking cookies, afternoon realizing a mural (fresque) in partnership with the association Paint A Smile for the event. Great day ! This is a second version, since for the first one, I tried to add markers but it didn't worked out." },
+      { n:5,  date:"28/09", keyword:"FOOD",         time:"20h58", duration:"5 min",  day:"Sunday",    ref:"live reference",  desc:"Not really a nice day, tired" },
+      { n:6,  date:"29/09", keyword:"RESUMPTION",   time:"17h35", duration:"12 min", day:"Monday",    ref:"photo as a reference", desc:"Tired, no energy, went back home from school sooner than planned, maybe the aftermath of last week ?" },
+      { n:7,  date:"30/09", keyword:"NEUTRAL",      time:"21h13", duration:"2 min",  day:"Tuesday",   ref:"no reference",   desc:"Tired, not quite satisfied of myself/ my day, I'm fine but not really ? Calm." },
+      { n:8,  date:"01/10", keyword:"MEDECINE",     time:"19h36", duration:"8 min",  day:"Wednesday", ref:"live reference",  desc:"Tired, nice day overall but food got problematic, made me take an atharax. So tired." },
+      { n:9,  date:"02/10", keyword:"MITIGÉ",       time:"20h41", duration:"9 min",  day:"Thursday",  ref:"live reference",  desc:"Confused ? Day was at the same time ok and not really" },
+      { n:10, date:"03/10", keyword:"COOKING",      time:"22h39", duration:"6 min",  day:"Friday",    ref:"no reference",   desc:"Morning was difficult, but cooked some caramelized cookies (homemade caramel !!) as well as a pizza in the afternoon, really loved it !" },
+      { n:11, date:"04/10", keyword:"ONE STROKE",   time:"17h24", duration:"4 min",  day:"Saturday",  ref:"no reference",   desc:"Went to the Beaux-Arts, where I learned a one stroke drawing technique, which was used for tonight's drawing since it was new and marques me. Felt okay." },
+      { n:12, date:"05/10", keyword:"DISGUST",      time:"21h57", duration:"3 min",  day:"Sunday",    ref:"no reference",   desc:"I DISGUST myself. Frustration." },
+      { n:13, date:"06/10", keyword:"TIRED",        time:"19h36", duration:"2 min",  day:"Monday",    ref:"no reference",   desc:"Came back home, Im really tired and slept a lot" },
+      { n:14, date:"07/10", keyword:"LONG",         time:"20h53", duration:"7 min",  day:"Tuesday",   ref:"reference",      desc:"Lots of tests, day went painfully slowly, alone most of the time, couldn't wait to get home" },
+      { n:15, date:"08/10", keyword:"COFFEE",       time:"21h34", duration:"2 min",  day:"Wednesday", ref:"no reference",   desc:"Hand is shaking, day was okay, drank two cups of coffee for the first time" },
+      { n:16, date:"09/10", keyword:"TSA",          time:"19h27", duration:"3 min",  day:"Thursday",  ref:"no reference",   desc:"??? → school, art and coffee, film in HLP L'enfant Sauvage, resonated with me from an autism perspective, nothing went ok." },
+      { n:17, date:"10/10", keyword:"HELPLESS",     time:"21h29", duration:"10 min", day:"Friday",    ref:"reference",      desc:"Morning → came back from school earlier, appointment with the paediatrician, couldn't get myself to go to the funfair with friends" },
+      { n:18, date:"11/10", keyword:"SYMPA",        time:"21h45", duration:"2 min",  day:"Saturday",  ref:"no reference",   desc:"Food went back out smoothly, outing with Guillaume at the funfair ! :)" },
+      { n:19, date:"12/10", keyword:"LAS",          time:"20h57", duration:"2 min",  day:"Sunday",    ref:"reference",      desc:"Food went as planned but I feel disappointed. I'll never be satisfied by doing all this and i know it damn well, I'm so tired of it all." },
+      { n:20, date:"13/10", keyword:"SLEPT",        time:"9h36",  duration:"3 min",  day:"Monday",    ref:"no reference",   desc:"Took atharax ; slept 11h30 ( didn't do the drawing the right day since i fell asleep at like 6 pm, it was made on the 14th at 9h36, but trying to show yesterday's feelings as accordingly as possible.)" },
+      { n:21, date:"14/10", keyword:"MOVIE",        time:"23h53", duration:"2 min",  day:"Tuesday",   ref:"no reference",   desc:"Really tired, surprised I made it through the day, went to see a queer movie with dad Concerning my daughter" },
+      { n:22, date:"15/10", keyword:"PAIN",         time:"20h19", duration:"2 min",  day:"Wednesday", ref:"no reference",   desc:"Day was okay, beaux-arts, disappointed by mom and dad's reaction to the food i brought, in pain because my period is probably back" },
+      { n:23, date:"16/10", keyword:"GREAT",        time:"21h43", duration:"3 min",  day:"Thursday",  ref:"no reference",   desc:"Art teacher was not here, so I baked some cookies, i feel nice and able to overcome whatever the world throws at me" },
+      { n:24, date:"17/10", keyword:"VARIED",       time:"21h38", duration:"2 min",  day:"Friday",    ref:"reference",      desc:"Begininng of the day difficult, only the evening was nice → was finally able to sleep (atharax), beginning of the vacations ! Also, nice meal" },
+      { n:25, date:"18/10", keyword:"BOF",          time:"21h44", duration:"20 min", day:"Saturday",  ref:"no reference",   desc:"Varied between ok and not okay (period, food, …)" },
+      { n:26, date:"19/10", keyword:"GRIMPE",       time:"22h11", duration:"2 min",  day:"Sunday",    ref:"no reference",   desc:"IN SO MUCH PAIN. Axel from Hospital's birthday, I then went with him to the climbing gym from 7 pm to 9 pm, I really missed this sport ! But the period's pain was HORRIBLE" },
+      { n:27, date:"20/10", keyword:"DREW",         time:"20h52", duration:"30 sec", day:"Monday",    ref:"no reference",   desc:"6h at the Beaux-Arts (EBAG) ; I'm TIRED, my forearms hurt because of yesterday's sport" },
+      { n:28, date:"21/10", keyword:"ALRIGHT",      time:"20h49", duration:"4 min",  day:"Tuesday",   ref:"reference",      desc:"Doing okay, day was long (EBAG), but session with a living model for the first time ! It was amazing !" },
+      { n:29, date:"22/10", keyword:"EBAG",         time:"21h15", duration:"1 min",  day:"Wednesday", ref:"no reference",   desc:"Worked with clay in the morning, visited a museum in the afternoon, lots of walking, exhausted but okay ; things ended up happening the way i wanted them to." },
+      { n:30, date:"23/10", keyword:"CHILL",        time:"21h46", duration:"1 min",  day:"Thursday",  ref:"no reference",   desc:"First day finally chill, i rested but the not amazing due to eating disorder, opinion divided on the day." },
+      { n:31, date:"24/10", keyword:"DISTANT",      time:"22h13", duration:"1 min",  day:"Friday",    ref:"no reference",   desc:"Didn't went so well but i'm distant from my emotions so i feel chill. I think i should feel bad but they are in standby mode to protect myself i guess ? Mom and dad are also not too well, Manon arrived from University to pay us a visit." },
+      { n:32, date:"25/10", keyword:"UNSURE",       time:"21h34", duration:"3 min",  day:"Saturday",  ref:"no reference",   desc:"Day ok ? Food wasn't ok though, same for weight : very frustrated, lots of ambivalence. We went to the Chalet." },
+      { n:33, date:"26/10", keyword:"CHALET",       time:"20h55", duration:"2 min",  day:"Sunday",    ref:"no reference",   desc:"Came back from Chalet, tummy hurted a lot. Food not ok yet again, angry especially towards the end of the day." },
+      { n:34, date:"27/10", keyword:"LONG",         time:"21h14", duration:"11 min", day:"Monday",    ref:"reference",      desc:"Appointement with psychiatrist at 10:10 am, walked in the rain, second stage of canvassing for the sale of chocolates to get money for the trip to Paris, food went globally okay. Feeling ok/ neutral ? Maybe distant ? day went sloooowly" },
+      { n:35, date:"28/10", keyword:"PAINT",        time:"22h27", duration:"4 min",  day:"Tuesday",   ref:"no reference",   desc:"Day was fine, very disappointed about weight, painted a lot." },
+      { n:36, date:"29/10", keyword:"COOL",         time:"21h41", duration:"1 min",  day:"Wednesday", ref:"no reference",   desc:"First time of the vacations where i was alone for the day, went okay, appointement with psychiatrist and parents at 6:30 pm. lots of pain to my stomach (the Great One)" },
+      { n:37, date:"30/10", keyword:"SISTER",       time:"22h52", duration:"10 min", day:"Thursday",  ref:"no reference",   desc:"Day went fine, the evening was really cool (tortillas, pumpkins carving, listened to tame impala with manon my sister) :3" },
+      { n:38, date:"31/10", keyword:"HALLOWEEN",    time:"03h24", duration:"2 min",  day:"Friday",    ref:"no reference",   desc:"Most of the day was ok ( two appointements : blood test and open day at the \"Cité des Métiers\" at Geneva). Then sleepover at Laura's house for Halloween ; we went Trick or Treating, ate pizzas and watched movies. It was really great but not for the food since i didn't managed to purge.; but i was kinda prepared to this event and had to act accordingly, i still felt bad." },
+      { n:39, date:"01/11", keyword:"PIERCING",     time:"21h11", duration:"5 min",  day:"Saturday",  ref:"no reference",   desc:"GOT MY NOSE PIERCED ! LOVE IT. Couldn't throw up tonight, feel so bad, hate myself so much." },
+      { n:40, date:"02/11", keyword:"PLANS",        time:"20h36", duration:"4 min",  day:"Sunday",    ref:"no reference",   desc:"Start of the day not amazing (english final task = confusions), then okay, evening offered panckakes and galettes for dinner → kept my engagement (but still didn't managed to compensate) weight = NOT OK → setting up a plan for tomorrow since i'm back to school :( Hope to be able to keep my promises" },
+      { n:42, date:"03/11", keyword:"SATISFIED",    time:"21h15", duration:"2 min",  day:"Monday",    ref:"no reference",   desc:"Back to school, went fine, finished class at 3 pm, telephone meeting for the eating disorder, chill, managed to keep my engagement" },
+      { n:43, date:"04/11", keyword:"JDC",          time:"21h42", duration:"3 min",  day:"Tuesday",   ref:"no reference",   desc:"Woke up at 5:45 am for the \"Journée Devoir et Citoyenneté\" it was cool ! Managed to control my cravings !" },
+      { n:44, date:"05/11", keyword:"ART",          time:"22h51", duration:"4 min",  day:"Wednesday", ref:"no reference",   desc:"Lots of art today; Feelings, nostalgia from Muraz's era came back, it felt quite weird and nice ! School turned me up for not eating lunch, but my great mood is stronger." },
+      { n:45, date:"06/11", keyword:"PUZZLES",      time:"22h26", duration:"0.3 min",day:"Thursday",  ref:"no reference",   desc:"Lost control at lunch, took an atharax, was tired, went to grab 2 puzzles i bought on \"Le Bon Coin\" for 4€" },
+      { n:46, date:"07/11", keyword:"FREELY",       time:"23h47", duration:"2 min",  day:"Friday",    ref:"no reference",   desc:"Departure of Mom and Dad at 6:20 am to Amsterdam, tummy HURTS, on the way to get a Too Good To GO with Guillaume and we got interpelled and almost assaulte by a bunch of stupid teenagers. But still good mood !" },
+      { n:47, date:"08/11", keyword:"FOOD ALONE",   time:"23h26", duration:"5 min",  day:"Saturday",  ref:"no reference",   desc:"Really tired, all alone, day went weirdly, couldn't stop eating, i don't know how i feel about myself ? I had planned it all, it went just as planned, but i am not fufilled." },
+      { n:48, date:"09/11", keyword:"CODING",       time:"22h38", duration:"1 min",  day:"Sunday",    ref:"no reference",   desc:"Mom and Dad are back. Spent most of the day coding. Ate a lot (normally ? ) But feels ok. Satisfied." },
+      { n:49, date:"10/11", keyword:"UNPRODUCTIVE", time:"22h45", duration:"2 min",  day:"Monday",    ref:"no reference",   desc:"Good day overall, but disappointed in myself because I haven't been really productive during this prolonged weekend." },
+      { n:50, date:"11/11", keyword:"OVER",         time:"20h00", duration:"1 min",  day:"Tuesday",   ref:"no reference",   desc:"OVER because no more food binging and back to school; Appointement for family therapy, met with Axel and Guillaume, little bit of urbex but didn't have the guts to keep going since i was alone and the place was huge. TIRED." },
+      { n:51, date:"12/11", keyword:"PROGRESS",     time:"21h57", duration:"2 min",  day:"Wednesday", ref:"no reference",   desc:"Feel fine ! lots of old feelings came back (nice !) (\"bad\" feelings but brings me good nostalgia) progressed a lot on my website, food went ok." },
+      { n:52, date:"13/11", keyword:"STRONGEST",    time:"19h26", duration:"13 min", day:"Thursday",  ref:"reference",      desc:"Start of the day was difficult ! Panick attack in HLP class. Phone meeting with an artist back at home, it went fine even though it really stressed me out. It lasted 18min45 ! I didn't thought i was going to be able to handle it all but i did !!!" },
+      { n:53, date:"14/11", keyword:"UNSURE",       time:"22h56", duration:"2 min",  day:"Friday",    ref:"no reference",   desc:"Day ok but long, tummy hurts, food : source of pleasure but i'm not sure if it was okay." },
+      { n:54, date:"15/11", keyword:"MURAZ",        time:"22h09", duration:"1 min",  day:"Saturday",  ref:"no reference",   desc:"Played a lot at Minecraft, evening and slept was spent at La Muraz's house, it was nice ! Some lonelier thoughts but that's ok." },
+      { n:55, date:"16/11", keyword:"HOPELESS",     time:"21h46", duration:"1 min",  day:"Sunday",    ref:"no reference",   desc:"day went okay, but towards the end of afternoon started feeling very down (school, work, food...)" },
+      { n:56, date:"17/11", keyword:"PRODUCTIVE?",  time:"21h15", duration:"2 min",  day:"Monday",    ref:"no reference",   desc:"felt tired, stressed by deutsch test that finally didn't occur, sport baccalaureate during afternoon so i went back home since i'm exempt from sport, afternoon went both fast and slow, managed to get some work done" },
+      { n:57, date:"18/11", keyword:"FOREST",       time:"21h40", duration:"3 min",  day:"Tuesday",   ref:"no reference",   desc:"very difficult day, german test once again reported, Enseignement Physique test's subject was half made up of shit i didn't even knew existed so didn't revised, violent dispute with Dad when i came back home, had to go out for a \"walk\" in the forest to calm down a bit and get my Dad to understand that he could go fuck off. Reminded me of my runaway, which felt weird." },
+      { n:58, date:"19/11", keyword:"CALMER",       time:"20h47", duration:"1 min",  day:"Wednesday", ref:"no reference",   desc:"despite art test, english test, eating at lunch, day was ok ? feel mitiged right now so i don't know, i'm tired." },
+      { n:59, date:"20/11", keyword:"HOME",         time:"21h14", duration:"1 min",  day:"Thursday",  ref:"no reference",   desc:"day was ok but went back home at 3:36 pm because my tummy hurted and i wanted to finally rest" },
+      { n:60, date:"21/11", keyword:"SNOW",         time:"22h19", duration:"2 min",  day:"Friday",    ref:"no reference",   desc:"stayed at home, could get some rest, it was great ! It also snowed !" },
+      { n:61, date:"22/11", keyword:"CINEMA",       time:"21h25", duration:"4 min",  day:"Saturday",  ref:"no reference",   desc:"My throat bled because of the vomiting... Listened to music, which really transported me to all kind of vibes, we went to La Muraz's house then to the movie theater to watch Insaisissables 3, it was great !" },
+      { n:62, date:"23/11", keyword:"NEUTRE",       time:"21h02", duration:"2 min",  day:"Sunday",    ref:"no reference",   desc:"Day was fine. Not much to say, food is uh.. meh ? This week is gonna be real exhausting." },
+    ];
+
+    // Store in sessionStorage so portrait.html can read it
+    sessionStorage.setItem('portraits', JSON.stringify(portraits));
+
+    const gallery = document.getElementById('gallery');
+    portraits.forEach((p, i) => {
+      const div = document.createElement('div');
+      div.className = 'portrait-thumb';
+      div.title = `${p.date} — ${p.keyword}`;
+      div.innerHTML = `<img src="portraits/${p.n}.jpg" alt="${p.date} ${p.keyword}" loading="lazy">`;
+      div.addEventListener('click', () => {
+        sessionStorage.setItem('currentIndex', i);
+        window.location.href = 'portrait.html';
+      });
+      gallery.appendChild(div);
+    });
+  </script>
+</body>
+</html>
